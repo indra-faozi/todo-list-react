@@ -7,11 +7,13 @@ const Activity = () => {
             [
                 {
                     id: 1,
-                    activity: 'Mabar'
+                    activity: 'Mabar',
+                    done: false
                 },
                 {
                     id: 2,
-                    activity: 'Ngoding'
+                    activity: 'Ngoding',
+                    done: false
                 }
             ],
         activityVal: '',
@@ -31,14 +33,13 @@ const Activity = () => {
         if (state.id) {
             const newObj = {
                 id: state.id,
-                activity: state.activityVal
+                activity: state.activityVal,
+                done: false
             };
             const findIndex = state.data.findIndex(d => d.id === state.id);
             const newData = [...state.data];
             newData[findIndex] = newObj
             setState({ data: newData, activityVal: '', id: '' });
-
-
             return;
         }
         const activity = {
@@ -65,8 +66,9 @@ const Activity = () => {
     }
 
     //Ketika update
-    const listHandleClick = (e, id) => {
+    const listHandleClick = (e, id, activity) => {
         const activityVal = e.target.innerText;
+        console.log(activityVal);
         if (activityVal) {
             setState({ ...state, activityVal, id });
         }
@@ -74,6 +76,17 @@ const Activity = () => {
 
     const onCancelHandle = () => {
         setState({ ...state, id: '', activityVal: '' })
+    }
+
+    const onCheckedHandle = (obj) => {
+        const newObj = {
+            ...obj,
+            done: !obj.done,
+        }
+        const findIndex = state.data.findIndex(d => d.id === obj.id);
+        const newData = [...state.data];
+        newData[findIndex] = newObj;
+        setState({data: newData, activityVal: '', id: ''});
     }
 
 
@@ -100,10 +113,10 @@ const Activity = () => {
             </div>
             <div className="container mt-5">
                 <div className="row">
-                    <div className="col-lg-2">
+                    <div className="col-lg-4">
                         <ul className="list-group">
                             {state.data.map(d =>
-                                <li onClick={(e) => listHandleClick(e, d.id)} className="list-group-item" >{d.activity} <button className="btn-close float-end" onClick={(e) => activityDeleteClickHandle(d.id)}></button></li>
+                                <li key={d.id} onClick={(e) => listHandleClick(e, d.id, d.activity)} className="list-group-item" ><input type="checkbox" checked={d.done} onChange={() => onCheckedHandle(d)} /> {d.activity} {d.done ? "(Selesai)" : "(Belum Selesai)"} <button className="btn-close float-end" onClick={(e) => activityDeleteClickHandle(d.id)}></button></li>
                             )}
                         </ul>
                     </div>
