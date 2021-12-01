@@ -3,19 +3,7 @@ import { useState } from "react";
 
 const Activity = () => {
     let [state, setState] = useState({
-        data:
-            [
-                {
-                    id: 1,
-                    activity: 'Mabar',
-                    done: false
-                },
-                {
-                    id: 2,
-                    activity: 'Ngoding',
-                    done: false
-                }
-            ],
+        data: [],
         activityVal: '',
         id: ''
     });
@@ -65,19 +53,22 @@ const Activity = () => {
         }
     }
 
-    //Ketika update
-    const listHandleClick = (e, id, activity) => {
+    //Ketika list di klik
+    const listHandleClick = (e, d) => {
         const activityVal = e.target.innerText;
-        console.log(activityVal);
+        const activity = d.activity;
+        const id = d.id;
         if (activityVal) {
-            setState({ ...state, activityVal, id });
+            setState({ ...state, activityVal: activity, id });
         }
     }
 
+    //Ketika tombol Cancel ditekan
     const onCancelHandle = () => {
         setState({ ...state, id: '', activityVal: '' })
     }
 
+    //Ketika checkbox di klik
     const onCheckedHandle = (obj) => {
         const newObj = {
             ...obj,
@@ -86,7 +77,7 @@ const Activity = () => {
         const findIndex = state.data.findIndex(d => d.id === obj.id);
         const newData = [...state.data];
         newData[findIndex] = newObj;
-        setState({data: newData, activityVal: '', id: ''});
+        setState({ data: newData, activityVal: '', id: '' });
     }
 
 
@@ -116,7 +107,7 @@ const Activity = () => {
                     <div className="col-lg-4">
                         <ul className="list-group">
                             {state.data.map(d =>
-                                <li key={d.id} onClick={(e) => listHandleClick(e, d.id, d.activity)} className="list-group-item" ><input type="checkbox" checked={d.done} onChange={() => onCheckedHandle(d)} /> {d.activity} {d.done ? "(Selesai)" : "(Belum Selesai)"} <button className="btn-close float-end" onClick={(e) => activityDeleteClickHandle(d.id)}></button></li>
+                                <li key={d.id} onClick={(e) => listHandleClick(e, d)} className="list-group-item" ><input type="checkbox" checked={d.done} onChange={() => onCheckedHandle(d)} /> {d.activity} {d.done ? "(Selesai)" : "(Belum Selesai)"} <button className="btn-close float-end" onClick={(e) => activityDeleteClickHandle(d.id)}></button></li>
                             )}
                         </ul>
                     </div>
